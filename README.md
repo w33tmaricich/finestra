@@ -1,10 +1,17 @@
 # widgets
 
-FIXME: description
+There was too much complexity in status-term. It will be much easier to create
+different widgets if they are all stand alone.
+
+The plan is to envoke widgets through this single application, pass some
+parameters, and launch a given widget.
+
+Each widget can be launched in its own terminal session, wich will look nice and
+pretty with a tiled widow manager.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Clone the repository and do a lein run.
 
 ## Usage
 
@@ -22,15 +29,9 @@ FIXME: listing of options this app accepts.
 
 ### Bugs
 
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
 
 ## License
 
-Copyright © 2017 FIXME
+Copyright © 2017 Alexander Maricich
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License 1.0.
