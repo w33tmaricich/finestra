@@ -80,7 +80,9 @@
         write-vertical (generate-write-vertical write)]
     (t/start TERM)
     (s/start SCREEN)
-    (fn-draw TERM SCREEN write write-vertical)))
+    (fn-draw TERM SCREEN write write-vertical)
+    (refresh TERM SCREEN)
+    (t/get-key-blocking TERM)))
 
 (defn border
   "Creates a border around the entire window."
@@ -98,11 +100,13 @@
     (write x y L-TL)
     (write x h L-BL)
     (write w y L-TR)
-    (write w h L-BR)
-    (refresh TERM SCREEN)
-    (t/get-key-blocking TERM)))
+    (write w h L-BR)))
 
 (defn titled-border
   "Creates a border around the window."
-  []
-  :fun)
+  [title]
+  (fn [TERM SCREEN write write-vertical]
+    (border TERM SCREEN write write-vertical)
+    (let [x 0
+          y 0]
+      (write (+ 2 x) y title))))
