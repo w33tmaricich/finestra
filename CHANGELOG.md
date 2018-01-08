@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- Windowing system. Displays borders with titles.
+- Weather widget. Displays:
+  - Name of location
+  - Textual condition
+  - Graphical condition
+  - Current temperature
+  - High temperature
+  - Low temperature
+- Weather is pulled from openweathermaps.com.
+
+# Template
+## [Unreleased]
 ### Changed
 - Add a new arity to `make-widget-async` to provide a different widget shape.
 
