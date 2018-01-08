@@ -103,7 +103,7 @@
     (write w h L-BR)))
 
 (defn titled-border
-  "Creates a border around the window."
+  "Creates a border around the window and inserts a title."
   [title]
   (fn [TERM SCREEN write write-vertical]
     (border TERM SCREEN write write-vertical)
