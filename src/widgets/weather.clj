@@ -94,6 +94,7 @@
     :clear ascii-sunny
     :clouds ascii-cloudy
     :fog ascii-misty
+    :haze ascii-misty
     :mist ascii-misty
     :rain ascii-stormy
     ascii-unknown))
