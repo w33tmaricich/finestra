@@ -1,4 +1,4 @@
-(defproject widgets "0.1.0-develop-SNAPSHOT"
+(defproject widgets "0.0.1-SNAPSHOT"
   :description "Useful widgets for everyday life."
   :url "https://github.com/w33tmaricich/widgets"
   :license {:name "Eclipse Public License"
