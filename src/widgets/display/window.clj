@@ -19,6 +19,9 @@
 ; Size of the terminal
 (def TERM-SIZE (ref [0 0]))
 
+; Screen refresh rate
+(def REFRESH-INTERVAL (* 10 1000))
+
 ; Helper functions.
 (defn str-repeat
   "Repeats a character length number of times to create a
@@ -32,11 +35,11 @@
   []
   (t/get-terminal :text))
 
-(defn refresh
-  "Refreshes screen to display buffer."
-  [TERM SCREEN]
-  (t/clear TERM)
-  (s/redraw SCREEN))
+;(defn refresh
+  ;"Refreshes screen to display buffer."
+  ;[TERM SCREEN]
+  ;(t/clear TERM)
+  ;(s/redraw SCREEN))
 
 (defn screen-resize
   "This function is called when the screen changes size."
@@ -49,6 +52,7 @@
   "Returns a symbol that acts as a terminal buffer."
   []
   (s/get-screen :text {:resize-listener screen-resize}))
+
 
 (defn generate-write
   "Creates the write function based on a given screen. The
@@ -80,9 +84,17 @@
         write-vertical (generate-write-vertical write)]
     (t/start TERM)
     (s/start SCREEN)
-    (fn-draw TERM SCREEN write write-vertical)
-    (refresh TERM SCREEN)
-    (t/get-key-blocking TERM)))
+    (loop []
+      (t/clear TERM)
+      (s/clear SCREEN)
+      (s/redraw SCREEN)
+      (s/move-cursor SCREEN 0 0)
+      (fn-draw TERM SCREEN write write-vertical)
+      (s/redraw SCREEN)
+      (case (t/get-key-blocking TERM {:timeout REFRESH-INTERVAL})
+        \r (do (println :refreshing) (recur))
+        nil (recur)
+        :exit))))
 
 (defn border
   "Creates a border around the entire window."
@@ -110,3 +122,5 @@
     (let [x 0
           y 0]
       (write (+ 2 x) y title))))
+
+
