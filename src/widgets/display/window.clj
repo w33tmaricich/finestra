@@ -122,5 +122,3 @@
     (let [x 0
           y 0]
       (write (+ 2 x) y title))))
-
-
