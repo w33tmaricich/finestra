@@ -20,7 +20,7 @@
 (def TERM-SIZE (ref [0 0]))
 
 ; Screen refresh rate
-(def REFRESH-INTERVAL (* 10 1000))
+(def REFRESH-INTERVAL (* 10 60 1000)) ; minutes, seconds, miliseconds
 
 ; Helper functions.
 (defn str-repeat
