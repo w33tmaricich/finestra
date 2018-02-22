@@ -1,4 +1,4 @@
-# widgets
+# finestra
 
 There was too much complexity in status-term. It will be much easier to create
 different widgets if they are all stand alone.

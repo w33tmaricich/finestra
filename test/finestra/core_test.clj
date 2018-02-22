@@ -1,6 +1,6 @@
-(ns widgets.core-test
+(ns finestra.core-test
   (:require [clojure.test :refer :all]
-            [widgets.core :refer :all]))
+            [finestra.core :refer :all]))
 
 (deftest constants
   (testing "Constants are set to expected values."

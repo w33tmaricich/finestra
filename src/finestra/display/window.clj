@@ -1,4 +1,4 @@
-(ns widgets.display.window
+(ns finestra.display.window
   (:require [lanterna.terminal :as t]
             [lanterna.screen :as s]))
 

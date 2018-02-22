@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file. This change
   - High temperature
   - Low temperature
 - Weather is pulled from openweathermaps.com.
+- Weather is displayable in f or c.
+- Type of widget to launch is selectable.
+- Screen refreshes on a timed interval.
 
 # Template
 ## [Unreleased]

@@ -1,4 +1,4 @@
-(defproject widgets "0.0.1-SNAPSHOT"
+(defproject finestra "0.0.1-SNAPSHOT"
   :description "Useful widgets for everyday life."
   :url "https://github.com/w33tmaricich/widgets"
   :license {:name "Eclipse Public License"
@@ -9,6 +9,6 @@
                  [clj-http "3.5.0"]
                  [org.clojure/data.json "0.2.6"]
                  [clojure-lanterna "0.9.7"]]
-  :main ^:skip-aot widgets.core
+  :main ^:skip-aot finestra.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

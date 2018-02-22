@@ -1,10 +1,10 @@
-(ns widgets.weather
+(ns finestra.weather
   (:require [lanterna.terminal :as t]
             [clojure.tools.logging :as log]
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [lanterna.screen :as s]
-            [widgets.display.window :as window]))
+            [finestra.display.window :as window]))
 
 (defn k->f
   "Converts a temperature from kelvin to fahrenheight"

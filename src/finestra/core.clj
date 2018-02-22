@@ -1,8 +1,8 @@
-(ns widgets.core
+(ns finestra.core
   (:require [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
-            [widgets.display.window :as window]
-            [widgets.weather :as weather])
+            [finestra.display.window :as window]
+            [finestra.weather :as weather])
   (:gen-class))
 
 (def DEBUG false)

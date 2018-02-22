@@ -1,6 +1,6 @@
-(ns widgets.weather-test
+(ns finestra.weather-test
   (:require [clojure.test :refer :all]
-            [widgets.weather :refer :all]))
+            [finestra.weather :refer :all]))
 
 (deftest temperature-conversions
   (testing "Temperature conversions."
