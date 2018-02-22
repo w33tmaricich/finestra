@@ -1,5 +1,6 @@
 (ns widgets.weather
   (:require [lanterna.terminal :as t]
+            [clojure.tools.logging :as log]
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [lanterna.screen :as s]
@@ -25,17 +26,19 @@
 
 (defn get-weather
   "Gets the weather from online using your zip code."
-  [zip]
-  (let [api-key (slurp "openweathermap.apikey")
+  [args]
+  (let [api-key-path (-> args :options :openweathermap-apikey)
+        zip (-> args :options :zip-code)
+        api-key (try
+                  (slurp api-key-path)
+                  (catch Exception e (.getMessage e)))
         response (client/get (str "http://api.openweathermap.org/data/2.5/weather?zip="
                                   zip
                                   "&appid="
                                   api-key))]
     (if (= 200 (:status response))
       (let [data (:body response)] ;string
-        (json/read-str data :key-fn keyword))
-        ;data)
-      nil)))
+        (json/read-str data :key-fn keyword)))))
 
 (defn ascii-cloudy
   "Draws an ascii cloud."
@@ -62,8 +65,17 @@
         y (:y location)]
     (ascii-cloudy write {:x x :y (dec y)})
     (write (inc x) (+ 3 y)   "` `_/`"   )
-    (write (+ 2 x) (+ 4 y)          "`/ ` `"  )))
+    (write (+ 2 x) (+ 4 y)    "`/ ` `"  )))
 
+(defn ascii-snowy
+  "A stormy cloud!"
+  [write location]
+  (let [x (:x location)
+        y (:y location)]
+    (ascii-cloudy write {:x x :y (dec y)})
+    (write (inc x) (+ 3 y)   "* * *"   )
+    (write (+ 2 x) (+ 4 y)    "* * *"  )))
+ 
 (defn ascii-sunny
   "Draws an ascii art sun!"
   [write location]
@@ -86,7 +98,6 @@
     (write (+ 5 x) (+ 3 y)     " "    )
     (write (+ 5 x) (+ 4 y)     "o"    )))
 
-
 (defn appropriate-image
   "chooses the icon drawing function appropriate to the current weather"
   [condition]
@@ -97,12 +108,12 @@
     :haze ascii-misty
     :mist ascii-misty
     :rain ascii-stormy
+    :snow ascii-snowy
     ascii-unknown))
-
 
 (defn generate
   "Creates the function that draws the weather for your specified location."
-  [zip-code]
+  [args]
   (fn [TERM SCREEN write write-vertical]
     (let [x 0
           y 0
@@ -114,12 +125,16 @@
           image-x (- (/ w 2) 4)
           image-y (- (/ h 2) 3)
           image-location {:x image-x :y image-y}
-          forecast (get-weather zip-code)
+          forecast (get-weather args)
           location (:name forecast)
           condition (-> forecast :weather first :main clojure.string/lower-case keyword)
-          temp (str :current " " (k->f (-> forecast :main :temp)) DEGREES "f")
-          temp-min (str :low " " (k->f (-> forecast :main :temp_min)) DEGREES "f")
-          temp-max (str :high " " (k->f (-> forecast :main :temp_max)) DEGREES "f")
+          units (-> args :options :units)
+          temp-fn (if (= units :c)
+                    k->c
+                    k->f)
+          temp (str :current " " (temp-fn (-> forecast :main :temp)) DEGREES (name units))
+          temp-min (str :low " " (temp-fn (-> forecast :main :temp_min)) DEGREES (name units))
+          temp-max (str :high " " (temp-fn (-> forecast :main :temp_max)) DEGREES (name units))
           ]
       ;generate the border
       ((window/titled-border (str (:border-title CONFIG) "-" location))
