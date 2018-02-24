@@ -9,18 +9,6 @@
 (def DEBUG false)
 (def VALID-WIDGETS [:weather :graph])
 
-; TODO: get this macro running.
-(defmacro log-errors
-  "Runs clojure.tools.logging as many times as there are errors."
-  [errors]
-  (let [do-block (for [error errors] `(log/error ~error))]
-    (cons `do do-block)))
-
-(defn- errors-log
-  [errors]
-  (let [do-block (for [error errors] `(log/error ~error))]
-    (eval (cons 'do do-block))))
-
 (defn- validate-widget
   "Returns true if the widget type is valid"
   [widget-type]
@@ -32,7 +20,7 @@
    ["-h" "--help"]
 
    ["-r" "--refresh-rate SECONDS" "The length of time in SECONDS the widget will wait before automatically refreshing"
-    :default 600
+    :default (* 10 60 1000)
     :parse-fn #(* (Integer/parseInt %) 1000)
     :validate [#(number? %) "The refresh rate specified should be an integer."]]
 
@@ -72,7 +60,8 @@
         zip-code (-> parsed-args :options :zip-code)
         errors (:errors parsed-args)]
     (when errors
-      (errors-log errors)
+      (dotimes [n (count errors)]
+        (log/error (errors n)))
       (System/exit 1))
     ;(println parsed-args)))
     (window/draw (case widget-type

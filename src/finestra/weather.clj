@@ -137,7 +137,7 @@
           temp-max (str :high " " (temp-fn (-> forecast :main :temp_max)) DEGREES (name units))
           ]
       ;generate the border
-      ((window/titled-border (str (:border-title CONFIG) "-" location))
+      ((window/titled-window-border (str (:border-title CONFIG) "-" location))
        TERM SCREEN write write-vertical)
       ;draw widget
       ((appropriate-image condition) write {:x (- (/ w 2) 4)
