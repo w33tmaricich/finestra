@@ -2,21 +2,39 @@
   (:require [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
             [finestra.display.window :as window]
+            [finestra.display.graph :as graph]
             [finestra.weather :as weather])
   (:gen-class))
 
 (def DEBUG false)
-(def VALID-WIDGETS [:weather])
-(def WEATHER-ZIP "90806")
+(def VALID-WIDGETS [:weather :graph])
+
+; TODO: get this macro running.
+(defmacro log-errors
+  "Runs clojure.tools.logging as many times as there are errors."
+  [errors]
+  (let [do-block (for [error errors] `(log/error ~error))]
+    (cons `do do-block)))
+
+(defn- errors-log
+  [errors]
+  (let [do-block (for [error errors] `(log/error ~error))]
+    (eval (cons 'do do-block))))
 
 (defn- validate-widget
   "Returns true if the widget type is valid"
   [widget-type]
   (not (nil? (some #(= % widget-type) VALID-WIDGETS))))
 
+
 (def cli-options
   [
    ["-h" "--help"]
+
+   ["-r" "--refresh-rate SECONDS" "The length of time in SECONDS the widget will wait before automatically refreshing"
+    :default 600
+    :parse-fn #(* (Integer/parseInt %) 1000)
+    :validate [#(number? %) "The refresh rate specified should be an integer."]]
 
    ["-o" "--openweathermap-apikey PATH" "Path to the file that contains an openweathermap api key for retrieving weather."
     :default "./openweathermap.apikey"
@@ -33,7 +51,7 @@
     :validate [validate-widget "The specified widget type is not supported."]]
 
    ["-z" "--zip-code ZIPCODE" "Your current zip code."
-    :default WEATHER-ZIP
+    :default "90806"
     :parse-fn str
     :validate [#(< 10000 (Integer/parseInt %) 99999) "Must be a valid US zipcode."]]
 
@@ -54,9 +72,11 @@
         zip-code (-> parsed-args :options :zip-code)
         errors (:errors parsed-args)]
     (when errors
-      (log/error errors)
+      (errors-log errors)
       (System/exit 1))
     ;(println parsed-args)))
     (window/draw (case widget-type
                    :weather (weather/generate parsed-args)
-                   (weather/generate parsed-args)))))
+                   :graph (graph/generate parsed-args)
+                   (weather/generate parsed-args))
+                 parsed-args)))

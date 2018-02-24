@@ -19,9 +19,6 @@
 ; Size of the terminal
 (def TERM-SIZE (ref [0 0]))
 
-; Screen refresh rate
-(def REFRESH-INTERVAL (* 10 60 1000)) ; minutes, seconds, miliseconds
-
 ; Helper functions.
 (defn str-repeat
   "Repeats a character length number of times to create a
@@ -77,8 +74,9 @@
 
 (defn draw
   "Draws an item."
-  [fn-draw]
-  (let [TERM (terminal-connect)
+  [fn-draw config]
+  (let [REFRESH-INTERVAL (-> config :options :refresh-rate)
+        TERM (terminal-connect)
         SCREEN (screen-connect)
         write (generate-write SCREEN)
         write-vertical (generate-write-vertical write)]
