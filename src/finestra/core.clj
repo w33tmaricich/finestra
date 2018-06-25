@@ -19,7 +19,7 @@
   [
    ["-h" "--help"]
    ["-r" "--refresh-rate SECONDS" "The length of time in SECONDS the widget will wait before automatically refreshing"
-    :default (* 10 60)
+    :default (* 10 60 1000)
     :parse-fn #(* (Integer/parseInt %) 1000)
     :validate [#(number? %) "The refresh rate specified should be an integer."]]
 
