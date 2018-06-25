@@ -67,6 +67,16 @@
     (write (inc x) (+ 3 y)   "` `_/`"   )
     (write (+ 2 x) (+ 4 y)    "`/ ` `"  )))
 
+(defn ascii-rainy
+  "A stormy cloud!"
+  [write location]
+  (let [x (:x location)
+        y (:y location)]
+    (ascii-cloudy write {:x x :y (dec y)})
+    (write (inc x) (+ 3 y)   "` ` ` `"   )
+    (write (+ 2 x) (+ 4 y)    "` ` ` `"  )))
+
+
 (defn ascii-snowy
   "A stormy cloud!"
   [write location]
@@ -104,10 +114,12 @@
   (case condition
     :clear ascii-sunny
     :clouds ascii-cloudy
+    :drizzle ascii-rainy
     :fog ascii-misty
     :haze ascii-misty
     :mist ascii-misty
     :rain ascii-stormy
+    :thunderstorm ascii-stormy
     :snow ascii-snowy
     ascii-unknown))
 

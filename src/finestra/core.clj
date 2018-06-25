@@ -7,7 +7,7 @@
 
 (def DEBUG false)
 (def VALID-WIDGETS [:weather])
-(def WEATHER-ZIP "90806")
+(def WEATHER-ZIP "21061")
 
 (defn- validate-widget
   "Returns true if the widget type is valid"
@@ -17,6 +17,10 @@
 (def cli-options
   [
    ["-h" "--help"]
+
+   ["-r" "--refresh RATE_SECONDS" "The length of time in seconds it takes to refresh a widget."
+    :default (* 10 60)
+    :parse-fn #(Integer/parseInt %)]
 
    ["-o" "--openweathermap-apikey PATH" "Path to the file that contains an openweathermap api key for retrieving weather."
     :default "./openweathermap.apikey"
