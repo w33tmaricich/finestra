@@ -19,9 +19,6 @@
 ; Size of the terminal
 (def TERM-SIZE (ref [0 0]))
 
-; Screen refresh rate
-(def REFRESH-INTERVAL (* 10 60 1000)) ; minutes, seconds, miliseconds
-
 ; Helper functions.
 (defn str-repeat
   "Repeats a character length number of times to create a
@@ -77,8 +74,9 @@
 
 (defn draw
   "Draws an item."
-  [fn-draw]
-  (let [TERM (terminal-connect)
+  [fn-draw config]
+  (let [REFRESH-INTERVAL (-> config :options :refresh-rate)
+        TERM (terminal-connect)
         SCREEN (screen-connect)
         write (generate-write SCREEN)
         write-vertical (generate-write-vertical write)]
@@ -98,12 +96,8 @@
 
 (defn border
   "Creates a border around the entire window."
-  [TERM SCREEN write write-vertical]
-  (let [x 0
-        y 0
-        w (dec (first (deref TERM-SIZE)))
-        h (dec (second (deref TERM-SIZE)))
-        horizontal-border (str-repeat L-HORIZ (- w 1))
+  [write write-vertical {:keys [x y w h]}]
+  (let [horizontal-border (str-repeat L-HORIZ (- w 1))
         vertical-border (str-repeat L-VERT (- w 1))]
     (write (inc x) y horizontal-border)
     (write (inc x) h horizontal-border)
@@ -114,11 +108,20 @@
     (write w y L-TR)
     (write w h L-BR)))
 
-(defn titled-border
+(defn window-border
+  "Creates a border around the entire window."
+  [TERM SCREEN write write-vertical]
+  (let [location {:x 0
+                  :y 0
+                  :w (dec (first (deref TERM-SIZE)))
+                  :h (dec (second (deref TERM-SIZE)))}]
+    (border write write-vertical location)))
+
+(defn titled-window-border
   "Creates a border around the window and inserts a title."
   [title]
   (fn [TERM SCREEN write write-vertical]
-    (border TERM SCREEN write write-vertical)
+    (window-border TERM SCREEN write write-vertical)
     (let [x 0
           y 0]
       (write (+ 2 x) y title))))
